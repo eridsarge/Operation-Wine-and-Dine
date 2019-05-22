@@ -1,4 +1,4 @@
-# Operation-Wine-Dine
+# Operation-Wine-and-Dine
 
 "This white goes great...with this red" was the level of sophistication I had during my most recent wine tasting with a group of friends.  Feeling as though it was time to become more cultured, I set out on this project to explore the chemical make up of different red wines and hopefully understand what makes some wines taste better than others.
 
