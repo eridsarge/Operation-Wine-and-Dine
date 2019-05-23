@@ -28,10 +28,10 @@ These variables were used in testing the hypothesis:
 10) Volatile Acidity
 11) Fixed Acidity
 
-Testing Methodology: Classified Wines based on quality as being either "Good" or "Bad" wines.  Wines with quality of 6 or higher were considered good, while 5 or lower as bad.  Then, created Binary logistic regression models in an effort to predict quality.
+Testing Methodology: Based on quality, classified Wines as being either "Good" or "Bad".  Wines with quality of 6 or higher were considered good, while 5 or lower as bad.  Then, created Binary logistic regression models in an effort to predict quality.
 
 Project Outcome: Final Logistic Regression Model performed with over 70% accuracy in predicting wine quality.  Using regression coefficiencts, also learned that quality can be attributed to the following characteristics:
-1) Less acidic wine
+1) Less acidic wines
 2) Wines with fewer chlorides (research tells me that high chlorides can cause a salty taste)
 3) Lower sulfur dioxide (some people can be allergic, including my aunt)
 4) Higher amounts of sulphates
