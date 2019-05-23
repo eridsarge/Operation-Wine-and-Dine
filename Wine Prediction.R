@@ -28,12 +28,13 @@ View(Wine_Predictor)
 #It looks like we have 11 variables that could potentially have an impact on predicting wine quality
 #Lets first check the data to assess missing variables
 Wine_Predictor%>%is.na%>%which()
+
 #We are lucky, there are no missing values in this data set
 #if a few points from a variable were missing I probably would have considered just dropping those rows 
 #or inserting the mean value (using mean may be favorable since we do not have a ton of observations in this set)
 
 
-#Start to understand our variables by performing analyzing basic summary statistics
+#Start to understand our variables by analyzing basic summary statistics
 summary(Wine_Predictor)
 
 
@@ -51,14 +52,15 @@ for (i in 1:12) {
 #lets get some general observations before we start attempting to construct our model
 #Many Red Wines appear to have Low Citric Acid (Potentially good predictor of good wines?)
 #Residual Sugar and Chlorides dont seem to have alot of variation, could this be helpful?
-#density and PH stand out due to what appears to be a normal distribution (potentially good predictors)
+#density and PH stand out due to what appears to be a normal distribution (potentially good predictors?)
 
 
-#Additional visualizations to look at variable correlation
+#Additional visualizations to look at variable correlations
 ggpairs(Wine_Predictor)
 ggcorr(Wine_Predictor, hjust=.9,size=3,palette = "RdBu", label = TRUE,layout.exp = 1)
+
 #looks like tasters like wine with higher Alcohol Content?
-#it also looks like the following variables could be correlated
+#it also looks like the following variables could be correlated to one another:
 #total sulfur and free sulfur (which makese sense?)
 #fixed acidity and citric acidity (more of one acid means more of another?)
 #density and fixed acidity (does acid increase density in liquids?)
@@ -83,6 +85,8 @@ Quality_Count<-mutate(Wine_Predictor,Wine_Quality=ifelse(quality<6,"Bad","Good")
 ggplot(data=Quality_Count,aes(x=Wine_Quality,y=Wine_Count,fill=Wine_Quality))+
   geom_bar(stat="identity")
 
+#6 looks like a good split point to me!
+
 
 #now that we have decided our cutoff, lets edit our data so that it falls in line with our new approach
 Wine_Predictor_Final<-mutate(Wine_Predictor,quality=ifelse(quality<6,0,1),id=row_number())
@@ -104,25 +108,31 @@ barplot(table(test$quality))
 
 
 #moving on to the fun part, creating our logistic regression model
+#I chose logistic regression since it will allow us to make a prediction
+#while also being able to see the variables and their interactions
+
+#Logistic Regression isnt the flashiest model but I feel it makes the most sense since it
+#will give us good visibility into which variables are driving 'good' vs 'bad' classifications
+
 #im going to start by using all our variables to see how our results look on the training data
 wineglm<-glm(quality~fixed.acidity+volatile.acidity+citric.acid+residual.sugar+chlorides+free.sulfur.dioxide+
             total.sulfur.dioxide+density+pH+sulphates+alcohol,data=train,family=binomial)
 
 summary(wineglm)
-#our summary results reveal some interesting results
+#our summary reveals some interesting results
 #the following values appear to be strong predictors of quality
 #volatile.acidity, chlorides, free sulfur dioxide, total sulfur dioxide, sulphates, alcohol
 #looking at the estimate values, is it safe to reason people like drier, less acidic red wines?
 
 
 #several of our variables are not coming back as significant though
-#lets try running our model and see if it improves our current AIC score after removing these variables
+#lets try running our model and see if we make any improvements
 wineglm2<-glm(quality~volatile.acidity+citric.acid+chlorides+free.sulfur.dioxide+
                total.sulfur.dioxide+sulphates+alcohol,data=train,family=binomial)
 
 summary(wineglm2)
 #citric acid is no longer significant
-#from our previous correlation matrix, we know that there is an observed relationship between 
+#from our previous correlation matrix, we also know that there is an observed relationship between 
 #both the sulfurs and both the acids in wine
 
 
@@ -132,10 +142,10 @@ wineglm3<-glm(quality~volatile.acidity+chlorides+
 
 summary(wineglm3)
 #Oh no, our 3rd model now has an even higher AIC than our first model! Is this a problem?
-#Personally, I feel best about our final, paired down model though
+#Personally, I feel best about our final, paired down model
 #it only has variables with significant p-values and removes values that are highly correlated
 #it would feel as though we would be overfitting the model if these variables were left in
-#*****future iteration might be to perform PCA on these correlated variables?
+#*****future iteration would be to perform PCA on the acid and sulfur variables but that is out of scope for time being
 
 
 #Now lets see how the model performs on our test data to determine if we made a good choice with selecting option 3
