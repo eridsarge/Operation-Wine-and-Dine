@@ -1,6 +1,5 @@
-#Start by Getting and Setting Working Directory
-getwd()
-setwd("C:/Users/erics/Desktop/Github Profile")
+#Project Goal, can we determine the chemical components that leads to good (or bad) tasting wine?
+#Then, using this knowledge could be predict future wines that we think will taste better or worse than others?
 
 
 #Install Packages to Perform Data Exploration and visualization
@@ -14,14 +13,14 @@ library(GGally)
 library(dplyr)
 library(tidyr)
 
-
-#Project Goal, Can we Predict the chemical breakdown that leads to good (or bad) tasting wine?
-#is there an optimal combination?
-#Can we predict Quality Variable in our Data set?
+#First thing first, we need to bring in our data
+#the Wine Predictor Data set is in the Wine and Dine Repository and can be read into R with the following
+#2 lines of code
+Wine_Data_Set<-'https://raw.github.com/eridsarge/Operation-Wine-and-Dine/master/Wine Predictor.csv'
+Wine_Predictor<-read.csv(Wine_Data_Set)
 
 
 #Explore Data Set to Get understanding of Data Elements
-Wine_Predictor<-read.csv('Wine Predictor.csv')
 head(Wine_Predictor)
 View(Wine_Predictor)
 
@@ -34,7 +33,7 @@ Wine_Predictor%>%is.na%>%which()
 #or inserting the mean value (using mean may be favorable since we do not have a ton of observations in this set)
 
 
-#Start to understand our variables by performing basic summarizations on them
+#Start to understand our variables by performing analyzing basic summary statistics
 summary(Wine_Predictor)
 
 
@@ -122,13 +121,12 @@ wineglm2<-glm(quality~volatile.acidity+citric.acid+chlorides+free.sulfur.dioxide
                total.sulfur.dioxide+sulphates+alcohol,data=train,family=binomial)
 
 summary(wineglm2)
-#we were able to improve our AIC ever so slightly
-#but citric acid is no longer significant
+#citric acid is no longer significant
 #from our previous correlation matrix, we know that there is an observed relationship between 
 #both the sulfurs and both the acids in wine
 
 
-#so lets run our model one more time leaving in only the sulfurs and acids that appear most significant
+#so lets run our model one more time leaving in only 1 sulfur and 1 acids based on Pvalue and Estimates
 wineglm3<-glm(quality~volatile.acidity+chlorides+
                 total.sulfur.dioxide+sulphates+alcohol,data=train,family=binomial)
 
@@ -172,4 +170,5 @@ table(Wine_Prediction$Wine_Prediction,Wine_Prediction$quality)
 #lower sulfur dioxide (some people can be allergic, including my aunt)
 #Sulphates do on the other hand seem to lead to better tasting wine
 #Finally, who doesnt like a nice, dry glass of red? More booze means better quality, so cheers!
+
 
