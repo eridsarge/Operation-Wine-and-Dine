@@ -13,7 +13,7 @@ library(GGally)
 library(dplyr)
 library(tidyr)
 
-#First thing first, we need to bring in our data
+#First things first, we need to bring in our data
 #the Wine Predictor Data set is in the Wine and Dine Repository and can be read into R with the following
 #2 lines of code
 Wine_Data_Set<-'https://raw.github.com/eridsarge/Operation-Wine-and-Dine/master/Wine Predictor.csv'
